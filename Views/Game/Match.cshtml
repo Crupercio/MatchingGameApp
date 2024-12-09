@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<MatchingGameApp.Models.GameItem>
 
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -9,18 +10,31 @@
     <title>Memory Game</title>
 </head>
 <body>
-    <h1>Memory Game</h1>
-    <!-- Top slots for selected cards -->
+    <h1>Memory Game - @ViewData["Category"]</h1>
+
+    <!-- Score Display -->
+    <div id="score">Score: 0</div>
+
+    <!-- Feedback Message -->
+    <div id="feedback-message"></div>
+
+    <!-- Selected Cards Slots -->
     <div id="selected-cards">
         <div class="big-slot" id="slot-1"></div>
         <div class="big-slot" id="slot-2"></div>
     </div>
 
-    <div id="feedback-message"></div>
-    <!-- Game grid -->
-    <div id="game-board">
+    <!-- Game Board -->
+    <div id="game-board" data-category="@ViewData["Category"]">
         <!-- Cards will be rendered dynamically -->
     </div>
+
+    <script>
+        // Initialize the game when the page loads
+        document.addEventListener("DOMContentLoaded", function () {
+            initializeGame(); // Fetch a random category and render the game board
+        });
+    </script>
 
     <script src="/js/memory-game.js"></script>
 </body>

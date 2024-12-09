@@ -1,0 +1,27 @@
+﻿@model IEnumerable<MatchingGameApp.Models.Score>
+
+<h1>Leaderboard</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th>User</th>
+            <th>Score</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var score in Model.Select((s, i) => new { Score = s, Rank = i + 1 }))
+        {
+            <tr class="@(score.Rank == 1 ? "top-score" : "")">
+                <td>@score.Rank</td>
+                <td>@(score.Score.User?.UserName != null ? score.Score.User.UserName.Trim() : "Unknown")</td>
+
+                <td>@score.Score.Points</td>
+                <td>@score.Score.DateAchieved.ToLocalTime()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+

@@ -1,0 +1,24 @@
+﻿@model IEnumerable<MatchingGameApp.Models.Score>
+
+<h1>Your Profile</h1>
+<h2>Game History</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Score</th>
+            <th>Date</th>
+            <th>Category</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var score in Model)
+        {
+            <tr>
+                <td>@score.Points</td>
+                <td>@score.DateAchieved.ToLocalTime()</td>
+                <td>@score.Category</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
