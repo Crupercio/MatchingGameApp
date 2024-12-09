@@ -19,31 +19,27 @@ namespace MatchingGameApp.Controllers
         }
 
         // GET: /Game/Match
-        public async Task<IActionResult> Match()
+        public async Task<IActionResult> Match(string category)
         {
-            // Fetch all items from the database
+            if (string.IsNullOrEmpty(category))
+            {
+                return BadRequest("Category is required.");
+            }
+
             var items = await _context.GameItems
+                .Where(g => g.Category == category)
                 .ToListAsync();
 
             if (!items.Any())
             {
-                return NotFound("No game items available.");
+                return NotFound("No items found for the selected category.");
             }
 
-            // Select a random category
-            var categories = items.Select(i => i.Category).Distinct().ToList();
-            var randomCategory = categories[new Random().Next(categories.Count)];
-
-            // Filter items by the selected category
-            var categoryItems = items
-                .Where(i => i.Category == randomCategory)
-                .OrderBy(_ => Guid.NewGuid()) // Shuffle in memory
-                .Take(8) // Take 8 unique items
-                .ToList();
-
-            ViewData["Category"] = randomCategory;
-            return View(categoryItems);
+            ViewData["Category"] = category; // Pass the category name to the view
+            return View(items);
         }
+
+
 
         [HttpPost]
         public async Task<IActionResult> SaveScore([FromBody] SaveScoreDto saveScoreDto)
@@ -104,29 +100,33 @@ namespace MatchingGameApp.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRandomCategory()
+        public async Task<IActionResult> GetRandomCategory(string category = null)
         {
-            // Fetch all unique categories
-            var categories = await _context.GameItems
-                .Select(g => g.Category)
-                .Distinct()
-                .ToListAsync();
-
-            if (!categories.Any())
+            if (string.IsNullOrEmpty(category))
             {
-                return NotFound("No categories available.");
+                // Fetch all unique categories if no category is provided
+                var categories = await _context.GameItems
+                    .Select(g => g.Category)
+                    .Distinct()
+                    .ToListAsync();
+
+                if (!categories.Any())
+                {
+                    return NotFound("No categories available.");
+                }
+
+                // Select a random category
+                category = categories[new Random().Next(categories.Count)];
             }
 
-            // Select a random category
-            var randomCategory = categories[new Random().Next(categories.Count)];
-
-            // Fetch items from the selected category
+            // Fetch items from the selected or random category
             var items = await _context.GameItems
-                .Where(g => g.Category == randomCategory)
+                .Where(g => g.Category == category)
                 .ToListAsync();
 
-            return Json(new { category = randomCategory, items });
+            return Json(new { category, items });
         }
+
 
 
 
@@ -146,6 +146,23 @@ namespace MatchingGameApp.Controllers
 
             return View(scores);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> SelectCategory()
+        {
+            var categories = await _context.GameItems
+                .Select(g => g.Category)
+                .Distinct()
+                .ToListAsync();
+
+            if (!categories.Any())
+            {
+                return NotFound("No categories available.");
+            }
+
+            return View(categories);
+        }
+
 
 
 
