@@ -36,9 +36,20 @@ namespace MatchingGameApp.Data
                 new GameItem { Id = 13, Name = "Orange", ImageUrl = "/images/orange.png", Category = "Fruits" },
                 new GameItem { Id = 14, Name = "Pineapple", ImageUrl = "/images/pineapple.webp", Category = "Fruits" },
                 new GameItem { Id = 15, Name = "Strawberry", ImageUrl = "/images/strawberry.webp", Category = "Fruits" },
-                new GameItem { Id = 16, Name = "Watermelon", ImageUrl = "/images/watermelon.webp", Category = "Fruits" }
+                new GameItem { Id = 16, Name = "Watermelon", ImageUrl = "/images/watermelon.webp", Category = "Fruits" },
+
+                // Anime (Dragon Ball Characters)
+                new GameItem { Id = 17, Name = "Goku", ImageUrl = "/images/goku.png", Category = "Anime" },
+                new GameItem { Id = 18, Name = "Chichi", ImageUrl = "/images/Chichi.png", Category = "Anime" },
+                new GameItem { Id = 19, Name = "Bills", ImageUrl = "/images/Bills.png", Category = "Anime" },
+                new GameItem { Id = 20, Name = "Puar", ImageUrl = "/images/Puar.png", Category = "Anime" },
+                new GameItem { Id = 21, Name = "Broly", ImageUrl = "/images/Broly.png", Category = "Anime" },
+                new GameItem { Id = 22, Name = "Bulma", ImageUrl = "/images/Bulma.png", Category = "Anime" },
+                new GameItem { Id = 23, Name = "Trunks", ImageUrl = "/images/Trunks.png", Category = "Anime" },
+                new GameItem { Id = 24, Name = "Krillin", ImageUrl = "/images/Krillin.png", Category = "Anime" }
             );
         }
+
 
     }
 }

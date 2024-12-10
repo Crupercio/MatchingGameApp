@@ -10,20 +10,23 @@ namespace MatchingGameApp.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Category",
-                table: "Scores",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: "");
+            // Remove the AddColumn operation since the column already exists
+            // migrationBuilder.AddColumn<string>(
+            //     name: "Category",
+            //     table: "Scores",
+            //     type: "TEXT",
+            //     nullable: false,
+            //     defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Category",
-                table: "Scores");
+            // Remove the DropColumn operation since we are not adding it
+            // migrationBuilder.DropColumn(
+            //     name: "Category",
+            //     table: "Scores");
         }
     }
 }
+
