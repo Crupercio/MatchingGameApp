@@ -28,15 +28,16 @@ namespace MatchingGameApp.Controllers
 
             ViewData["Category"] = category;
 
-            // Fetch unique items for the selected category
+            // Ensure only unique items are fetched
             var items = await _context.GameItems
                 .Where(g => g.Category == category)
-                .GroupBy(g => g.Id)
-                .Select(g => g.First())
+                .GroupBy(g => g.Id) // Group by Id to ensure uniqueness
+                .Select(g => g.First()) // Select the first item in each group
                 .ToListAsync();
 
             return View(items);
         }
+
 
 
         [HttpPost]

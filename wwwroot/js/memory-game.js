@@ -59,16 +59,16 @@ function setupGameBoard(items) {
     board.innerHTML = "";
     slot1.innerHTML = slot2.innerHTML = "";
 
-    // Ensure we have 8 unique items for matching
-    const uniqueItems = items.slice(0, 8); // Limit to 8 unique items
+    // Use all unique items from the backend
+    const uniqueItems = items.slice(0, 8); // Ensure exactly 8 unique items
 
-    // Duplicate the unique items to create pairs
+    // Duplicate the items to form pairs
     const pairs = [...uniqueItems, ...uniqueItems];
 
     // Shuffle the pairs
     cards = shuffle(pairs);
 
-    // Render cards
+    // Render the cards
     cards.forEach((item, index) => {
         const card = document.createElement("div");
         card.classList.add("card");
@@ -85,8 +85,9 @@ function setupGameBoard(items) {
 
     setTimeout(() => {
         hideAllCards();
-    }, 3000);
+    }, 5000);
 }
+
 
 
 
