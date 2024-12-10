@@ -1,14 +1,17 @@
 ﻿@model List<string>
 
 <h1>Select a Category</h1>
-<form method="get" action="/Game/Match">
-    <label for="category">Choose a category:</label>
-    <select id="category" name="category" required>
-        @foreach (var category in Model)
-        {
-            <option value="@category">@category</option>
-        }
-    </select>
-    <button type="submit">Start Game</button>
-</form>
+<div class="category-grid">
+    @foreach (var category in Model)
+    {
+        <form method="get" action="/Game/Match" class="category-card">
+            <input type="hidden" name="category" value="@category" />
+            <button type="submit" class="category-card-button">
+                <img src="/images/@category.ToLower().Replace(" ", "_")_icon.png" alt="@category" />
+                <span>@category</span>
+            </button>
+        </form>
+    }
+</div>
+
 
