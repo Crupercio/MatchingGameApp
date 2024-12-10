@@ -21,24 +21,22 @@ namespace MatchingGameApp.Controllers
         // GET: /Game/Match
         public async Task<IActionResult> Match(string category)
         {
-            if (string.IsNullOrEmpty(category))
+            if (string.IsNullOrWhiteSpace(category))
             {
-                return BadRequest("Category is required.");
+                return RedirectToAction("SelectCategory");
             }
 
+            ViewData["Category"] = category;
+
+            // Fetch unique items for the selected category
             var items = await _context.GameItems
                 .Where(g => g.Category == category)
+                .GroupBy(g => g.Id)
+                .Select(g => g.First())
                 .ToListAsync();
 
-            if (!items.Any())
-            {
-                return NotFound("No items found for the selected category.");
-            }
-
-            ViewData["Category"] = category; // Pass the category name to the view
             return View(items);
         }
-
 
 
         [HttpPost]
@@ -87,64 +85,21 @@ namespace MatchingGameApp.Controllers
             return Ok();
         }
 
-
-        public async Task<IActionResult> Leaderboard()
-        {
-            // Fetch all scores including user data
-            var scores = await _context.Scores
-                .Include(s => s.User) // Include the related user data
-                .OrderByDescending(s => s.Points) // Order by score in descending order
-                .ToListAsync();
-
-            return View(scores);
-        }
-
         [HttpGet]
-        public async Task<IActionResult> GetRandomCategory(string category = null)
+        public async Task<IActionResult> GetCategoryItems(string category)
         {
-            if (string.IsNullOrEmpty(category))
+            if (string.IsNullOrWhiteSpace(category))
             {
-                // Fetch all unique categories if no category is provided
-                var categories = await _context.GameItems
-                    .Select(g => g.Category)
-                    .Distinct()
-                    .ToListAsync();
-
-                if (!categories.Any())
-                {
-                    return NotFound("No categories available.");
-                }
-
-                // Select a random category
-                category = categories[new Random().Next(categories.Count)];
+                return BadRequest("Category is required.");
             }
 
-            // Fetch items from the selected or random category
             var items = await _context.GameItems
                 .Where(g => g.Category == category)
+                .GroupBy(g => g.Id)
+                .Select(g => g.First())
                 .ToListAsync();
 
             return Json(new { category, items });
-        }
-
-
-
-
-        [Authorize]
-        public async Task<IActionResult> Profile()
-        {
-            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            var scores = await _context.Scores
-                .Where(s => s.UserId == userId)
-                .OrderByDescending(s => s.DateAchieved)
-                .ToListAsync();
-
-            return View(scores);
         }
 
         [HttpGet]
@@ -163,11 +118,31 @@ namespace MatchingGameApp.Controllers
             return View(categories);
         }
 
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
 
+            var scores = await _context.Scores
+                .Where(s => s.UserId == userId)
+                .OrderByDescending(s => s.DateAchieved)
+                .ToListAsync();
 
+            return View(scores);
+        }
 
+        public async Task<IActionResult> Leaderboard()
+        {
+            var scores = await _context.Scores
+                .Include(s => s.User)
+                .OrderByDescending(s => s.Points)
+                .ToListAsync();
 
+            return View(scores);
+        }
     }
 }
-
-

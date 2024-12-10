@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<MatchingGameApp.Models.GameItem>
 
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,12 +10,11 @@
 </head>
 <body>
     <h1>Memory Game - @ViewData["Category"]</h1>
-    
+
+    <!-- Timer Display -->
     <div id="game-timer">
         Time Left: <span id="timer-value">60</span> seconds
     </div>
-
-
 
     <!-- Score Display -->
     <div id="score">Score: 0</div>
@@ -36,14 +34,14 @@
     </div>
 
     <script>
-        // Initialize the game when the page loads
+        // Pass the selected category to the game
         document.addEventListener("DOMContentLoaded", function () {
-            initializeGame(); // Fetch a random category and render the game board
+            const category = "@ViewData["Category"]";
+            initializeGame(category); // Fetch and render the game board with the selected category
         });
     </script>
 
     <script src="/js/memory-game.js"></script>
 </body>
 </html>
-
 

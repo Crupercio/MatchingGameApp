@@ -12,15 +12,19 @@ let isAnimating = false;
 let hasFinalScoreSaved = false;
 
 let timerInterval;
-let timeLeft = 60;
+let timeLeft = 60; // Default time for the game
 
 // Initialize game
-function initializeGame() {
-    fetch("/Game/GetRandomCategory")
+function initializeGame(category = null) {
+    fetch(`/Game/GetCategoryItems?category=${category}`)
         .then(response => response.json())
         .then(data => {
             if (data && data.items) {
-                cards = shuffle([...data.items, ...data.items]);
+                resetGameState();
+                const uniqueItems = data.items.filter(
+                    (item, index, self) => index === self.findIndex(i => i.id === item.id)
+                );
+                cards = shuffle([...uniqueItems, ...uniqueItems]);
                 setupGameBoard(cards);
                 startTimer(240);
             } else {
@@ -30,7 +34,19 @@ function initializeGame() {
         .catch(error => console.error("Error fetching game items:", error));
 }
 
-// Shuffle array
+function resetGameState() {
+    board.innerHTML = "";
+    slot1.innerHTML = "";
+    slot2.innerHTML = "";
+    cards = [];
+    flippedCards = [];
+    matchedCards = [];
+    streak = 0;
+    score = 0;
+    hasFinalScoreSaved = false;
+    stopTimer();
+}
+
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -42,9 +58,17 @@ function shuffle(array) {
 function setupGameBoard(items) {
     board.innerHTML = "";
     slot1.innerHTML = slot2.innerHTML = "";
-    const uniqueItems = items.slice(0, 8);
-    cards = shuffle([...uniqueItems, ...uniqueItems]);
 
+    // Ensure we have 8 unique items for matching
+    const uniqueItems = items.slice(0, 8); // Limit to 8 unique items
+
+    // Duplicate the unique items to create pairs
+    const pairs = [...uniqueItems, ...uniqueItems];
+
+    // Shuffle the pairs
+    cards = shuffle(pairs);
+
+    // Render cards
     cards.forEach((item, index) => {
         const card = document.createElement("div");
         card.classList.add("card");
@@ -63,6 +87,8 @@ function setupGameBoard(items) {
         hideAllCards();
     }, 3000);
 }
+
+
 
 function hideAllCards() {
     const allCards = document.querySelectorAll(".card");
@@ -93,31 +119,22 @@ function flipCard(card, index) {
 function checkMatch() {
     const [first, second] = flippedCards;
 
-    if (!first || !second) {
-        console.error("Error: Flipped cards not properly set.");
-        resetInteraction();
-        return;
-    }
-
     if (cards[first.index].id === cards[second.index].id) {
         matchedCards.push(first.index, second.index);
         first.card.classList.add("matched");
         second.card.classList.add("matched");
         slot1.innerHTML = slot2.innerHTML = "";
         showMessage("Match Found!", "success");
-
         streak++;
-        const pointsToAdd = 10 + (streak - 1) * 2;
-        updateScore(pointsToAdd);
+        updateScore(10 + (streak - 1) * 2);
 
-        // Incremental save only if the game is ongoing
         if (!hasFinalScoreSaved && matchedCards.length < cards.length) {
             sendScoreToServer(score);
         }
 
         if (matchedCards.length === cards.length) {
             stopTimer();
-            endGame(); // Centralized final save logic
+            endGame();
         } else {
             resetInteraction();
         }
@@ -129,7 +146,6 @@ function checkMatch() {
             second.card.querySelector(".card-front").style.display = "none";
             slot1.innerHTML = slot2.innerHTML = "";
             showMessage("Try Again!", "error");
-
             streak = 0;
             updateScore(-5);
             resetInteraction();
@@ -146,8 +162,6 @@ function updateScore(points) {
     const scoreElement = document.getElementById("score");
     if (scoreElement) {
         scoreElement.textContent = `Score: ${score}`;
-    } else {
-        console.error("Score element not found!");
     }
 }
 
@@ -176,7 +190,6 @@ function sendScoreToServer(points, isFinal = false) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]')?.value || ''
         },
         body: JSON.stringify({ points, isFinal, category })
     })
@@ -233,5 +246,5 @@ function disableBoard() {
     });
 }
 
-// Initialize
+// Initialize game
 initializeGame();
