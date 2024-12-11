@@ -147,9 +147,9 @@ namespace MatchingGameApp.Controllers
             ViewData["UserName"] = user.UserName;
 
             var scores = await _context.Scores
-                .Include(s => s.User)
-                .OrderByDescending(s => s.Points)
-                .ToListAsync();
+                .Where(s => s.UserId == userId)
+                .OrderByDescending(s => s.DateAchieved)
+                .ToListAsync(); 
 
             return View(scores);
         }
