@@ -157,15 +157,25 @@ namespace MatchingGameApp.Controllers
         public async Task<IActionResult> Leaderboard()
         {
             var scores = await _context.Scores
-                 .Include(s => s.User)
-                 .OrderByDescending(s => s.Points)
-                 .ToListAsync();
-                         
+                .Include(s => s.User) // Include User data
+                .OrderByDescending(s => s.Points)
+                .Select(s => new
+                {
+                    Rank = 0, // Rank calculation will happen later
+                    Points = s.Points,
+                    DateAchieved = s.DateAchieved,
+                    Category = s.Category,
+                    UserName = s.User != null && !string.IsNullOrEmpty(s.User.UserName)
+                        ? s.User.UserName.Trim() : "Unknown",
+                    ProfilePictureUrl = s.User != null && !string.IsNullOrEmpty(s.User.ProfilePictureUrl)
+                        ? s.User.ProfilePictureUrl : "/images/profile-default.png"
+                })
+                .ToListAsync();
 
             return View(scores);
-
-
         }
+
+
 
 
 

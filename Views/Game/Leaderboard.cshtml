@@ -13,32 +13,26 @@
                     <thead class="table-dark">
                         <tr>
                             <th>Rank</th>
-                            <th>Avatar</th>
                             <th>User</th>
+                            <th>Profile</th>
                             <th>Score</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
-
-                        @foreach (var score in Model)
-                        {
-                        Console.WriteLine($"UserName: {score.User?.UserName}, ProfilePictureUrl: {score.User?.ProfilePictureUrl}");
-                        }
-
-                        @foreach (var score in Model.Select((s, i) => new { Score = s, Rank = i + 1 }))
+                        @foreach (var score in Model.Select((s, i) => new { s.UserName, s.ProfilePictureUrl, s.Points, s.DateAchieved, Rank = i + 1 }))
                         {
                             <tr class="@(score.Rank == 1 ? "table-warning" : score.Rank == 2 ? "table-secondary" : score.Rank == 3 ? "table-light" : "")">
                                 <td>@score.Rank</td>
+                                <td>@score.UserName</td>
                                 <td>
-                                    <img src=@(score.Score.User?.ProfilePictureUrl)
+                                    <img src="@score.ProfilePictureUrl"
                                          alt="Profile Picture"
                                          class="rounded-circle shadow-sm"
                                          style="width: 50px; height: 50px; object-fit: cover;">
                                 </td>
-                                <td>@(score.Score.User?.UserName?.Trim() ?? "Unknown")</td>
-                                <td>@score.Score.Points</td>
-                                <td>@score.Score.DateAchieved.ToLocalTime()</td>
+                                <td>@score.Points</td>
+                                <td>@score.DateAchieved.ToLocalTime()</td>
                             </tr>
                         }
                         @if (!Model.Any())
@@ -53,3 +47,5 @@
         </div>
     </div>
 </div>
+
+

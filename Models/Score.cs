@@ -12,7 +12,7 @@ namespace MatchingGameApp.Models
         public string UserId { get; set; } = string.Empty;
 
         [ForeignKey("UserId")]
-        public ApplicationUser User { get; set; } = new ApplicationUser();
+        public ApplicationUser User { get; set; }
 
         public int Points { get; set; }
 
