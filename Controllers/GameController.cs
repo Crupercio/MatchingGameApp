@@ -35,8 +35,11 @@ namespace MatchingGameApp.Controllers
                 .Select(g => g.First()) // Select the first item in each group
                 .ToListAsync();
 
+          
+
             return View(items);
         }
+
 
 
 

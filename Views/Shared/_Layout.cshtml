@@ -12,7 +12,9 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light border-bottom mb-3" style="background-image: url('/images/background.png'); background-size: cover; background-position: center; background-color: rgba(255, 255, 255, 0.5);">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" style="color: white; font-family: 'Fredoka One', sans-serif;">MatchingGameApp</a>
+                <a href="/" class="navbar-brand">
+                    <img src="/images/logo.png" alt="Logo" class="nav" style="height: 100px; width: auto;">
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -22,19 +24,20 @@
                         <!-- Increased gap from gap-3 to gap-5 -->
                         <!-- Image Buttons -->
                         <a href="/Game/Profile">
-                            <img src="/images/profile-icon.png" alt="Profile" class="nav-button">
+                            <img src="/images/profile-icon.png" alt="Profile" class="nav-button" style="height: 100px; width: auto;">
                         </a>
                         <a href="/Game/SelectCategory">
-                            <img src="/images/match-game-icon.png" alt="Match Game" class="nav-button">
+                            <img src="/images/match-game-icon.png" alt="Match Game" class="nav-button" style="height: 100px; width: auto;">
                         </a>
                         <a href="/Game/Leaderboard">
-                            <img src="/images/leaderboard-icon.png" alt="Leaderboard" class="nav-button">
+                            <img src="/images/leaderboard-icon.png" alt="Leaderboard" class="nav-button" style="height: 100px; width: auto;">
                         </a>
                     </div>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
+
         
     </header>
     <div class="container">

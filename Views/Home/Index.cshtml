@@ -1,8 +1,4 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
-
-<div class="container py-5">
+﻿<div class="container py-5">
     <!-- Header -->
     <div class="text-center mb-4">
         <h1 class="display-4 fw-bold text-primary">🎉 Welcome to FunLand! 🎉</h1>
@@ -11,22 +7,69 @@
     <!-- Content Section -->
     <div class="row align-items-center">
         <!-- Left Image -->
-        <div class="col-md-4 text-center mb-3 mb-md-0">
+        <div class="col-md-3 text-center mb-3 mb-md-0">
             <img src="/images/left-image.png" alt="Kids Playing" class="img-fluid rounded shadow-lg">
         </div>
 
         <!-- Introductory Text -->
-        <div class="col-md-4">
+        <div class="col-md-6">
             <p class="lead text-muted text-center">
-                Welcome to FunLand, a vibrant platform for kids to learn, play, and grow! Enjoy engaging games like
-                matching pairs, sorting challenges, and brain puzzles. Every activity is designed to entertain and
-                educate, making learning fun for everyone!
+                Welcome to FunLand, a vibrant platform for kids to learn, play, and grow! Here, every day is an
+                adventure filled with educational and fun activities. Dive into engaging games like matching pairs,
+                sorting challenges, and brain puzzles. Explore a world where learning meets entertainment, fostering
+                creativity, problem-solving, and cognitive skills.
+            </p>
+            <p class="text-muted text-center">
+                Keep an eye on our "Pokémon of the Day" below and let it inspire your daily adventures! FunLand isn't
+                just a place to play—it's a place to grow and shine. Let's make every moment magical and meaningful!
             </p>
         </div>
 
         <!-- Right Image -->
-        <div class="col-md-4 text-center">
+        <div class="col-md-3 text-center">
             <img src="/images/right-image.png" alt="Learning Fun" class="img-fluid rounded shadow-lg">
         </div>
     </div>
+
+    <!-- Pokémon of the Day Section -->
+    <div class="text-center mt-5">
+        <h2 class="fw-bold text-secondary">Pokémon of the Day</h2>
+        <p class="text-muted">Discover a new Pokémon every day and spark your imagination!</p>
+        <div id="pokemon-of-the-day" class="mt-4">
+            <img src="" alt="Pokémon of the Day" class="img-fluid" style="max-width: 200px;">
+            <p id="pokemon-name" class="fw-bold text-primary mt-3"></p>
+        </div>
+    </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Get the current date to calculate a unique Pokémon ID
+        const currentDate = new Date();
+        const pokemonId = (currentDate.getDate() % 1010) + 1; // There are 1010 Pokémon (as of latest API update)
+
+        // Fetch Pokémon data
+        const imageUrl = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+
+        // Update the Pokémon of the Day section
+        const pokemonImage = document.querySelector("#pokemon-of-the-day img");
+        const pokemonName = document.getElementById("pokemon-name");
+
+        pokemonImage.src = imageUrl;
+        pokemonImage.alt = `Pokémon #${pokemonId}`;
+
+        // Fetch Pokémon name using the Pokémon API
+        fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.name) {
+                    pokemonName.textContent = data.name.charAt(0).toUpperCase() + data.name.slice(1); // Capitalize name
+                } else {
+                    pokemonName.textContent = `Pokémon #${pokemonId}`;
+                }
+            })
+            .catch(() => {
+                pokemonName.textContent = `Pokémon #${pokemonId}`;
+            });
+    });
+</script>

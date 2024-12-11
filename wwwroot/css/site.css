@@ -35,6 +35,10 @@ p {
     color: #333;
 }
 
+.custom-rounded {
+    border-radius: 12.5%; /* Adjust percentage as needed */
+}
+
 /* Feedback Message */
 #feedback-message {
     font-size: 18px;
@@ -246,7 +250,7 @@ p {
 .nav-button {
     width: 100px;
     height: 100px;
-    border-radius: 50%;
+    border-radius: 25%;
     border: 2px solid #fff;
     transition: transform 0.3s, box-shadow 0.3s;
     object-fit: cover;
