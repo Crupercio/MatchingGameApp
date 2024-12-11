@@ -4,18 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MatchingGameApp.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
+
         public DbSet<GameItem> GameItems { get; set; }
         public DbSet<Score> Scores { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configure ApplicationUser to ensure compatibility with IdentityUser
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
+                entity.HasKey(e => e.Id); // Ensure the primary key is configured
+            });
 
             modelBuilder.Entity<GameItem>().HasData(
                 // Animals
@@ -53,3 +62,4 @@ namespace MatchingGameApp.Data
 
     }
 }
+

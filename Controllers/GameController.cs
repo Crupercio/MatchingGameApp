@@ -5,6 +5,7 @@ using MatchingGameApp.Models;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace MatchingGameApp.Controllers
 {
@@ -12,12 +13,15 @@ namespace MatchingGameApp.Controllers
     public class GameController : Controller
     {
         private readonly ApplicationDbContext _context;
+        
 
-        public GameController(ApplicationDbContext context)
+        public GameController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
         }
 
+        private readonly UserManager<ApplicationUser> _userManager;
         // GET: /Game/Match
         public async Task<IActionResult> Match(string category)
         {
@@ -122,7 +126,8 @@ namespace MatchingGameApp.Controllers
             return View(categories);
         }
 
-        [Authorize]
+
+
         public async Task<IActionResult> Profile()
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -131,9 +136,19 @@ namespace MatchingGameApp.Controllers
                 return Unauthorized();
             }
 
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            // Set the default profile picture URL
+            ViewData["ProfilePicture"] = user.ProfilePictureUrl ?? "/images/profile-default.png";
+            ViewData["UserName"] = user.UserName;
+
             var scores = await _context.Scores
-                .Where(s => s.UserId == userId)
-                .OrderByDescending(s => s.DateAchieved)
+                .Include(s => s.User)
+                .OrderByDescending(s => s.Points)
                 .ToListAsync();
 
             return View(scores);
@@ -142,11 +157,57 @@ namespace MatchingGameApp.Controllers
         public async Task<IActionResult> Leaderboard()
         {
             var scores = await _context.Scores
-                .Include(s => s.User)
-                .OrderByDescending(s => s.Points)
-                .ToListAsync();
+                 .Include(s => s.User)
+                 .OrderByDescending(s => s.Points)
+                 .ToListAsync();
+                         
 
             return View(scores);
+
+
         }
+
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProfilePicture(string profilePictureUrl)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound("User not found.");
+            }
+
+            user.ProfilePictureUrl = profilePictureUrl;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Failed to update profile picture.");
+                return RedirectToAction("Profile");
+            }
+
+            TempData["SuccessMessage"] = "Profile picture updated successfully!";
+            return RedirectToAction("Profile");
+        }
+
+        public IActionResult UpdatePicture()
+        {
+            return View();
+        }
+
+
+
+
+
+
     }
 }

@@ -9,15 +9,15 @@ namespace MatchingGameApp.Models
         public int Id { get; set; }
 
         [Required]
-        public string UserId { get; set; } // Foreign key to the Identity user
+        public string UserId { get; set; } = string.Empty;
 
         [ForeignKey("UserId")]
-        public IdentityUser User { get; set; } // Navigation property to IdentityUser
+        public ApplicationUser User { get; set; } = new ApplicationUser();
 
         public int Points { get; set; }
 
         [Required]
-        public string Category { get; set; } // Add Category property
+        public string Category { get; set; } = string.Empty;
 
         public DateTime DateAchieved { get; set; }
     }

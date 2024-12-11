@@ -282,3 +282,34 @@ p {
         margin: 0;
         font-size: 1.2rem;
     }
+
+img.rounded-circle {
+    max-width: 100%;
+    border: 3px solid #007bff; /* Add a border for better visual appeal */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 123, 255, 0.05); /* Light blue for better row distinction */
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa; /* Light hover effect */
+}
+
+.table-warning {
+    background-color: #fff3cd !important; /* Gold for 1st place */
+}
+
+.table-secondary {
+    background-color: #d6d8db !important; /* Silver for 2nd place */
+}
+
+.table-light {
+    background-color: #f8f9fa !important; /* Bronze for 3rd place */
+}
+
+

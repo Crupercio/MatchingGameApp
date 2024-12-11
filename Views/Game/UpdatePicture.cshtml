@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Update Profile Picture";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <h1 class="text-center mb-4">Update Profile Picture</h1>
+            <form method="post" action="/Game/UpdateProfilePicture">
+                <div class="form-group mb-3">
+                    <label for="profilePictureUrl" class="form-label">Profile Picture URL</label>
+                    <input type="url" id="profilePictureUrl" name="profilePictureUrl"
+                           class="form-control" placeholder="Enter image URL" required>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary w-100">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
